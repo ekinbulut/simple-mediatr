@@ -1,6 +1,6 @@
-# Base MediatR
+# Smpl.Mediatr
 
-A lightweight mediator pattern implementation for .NET 9, providing a simple and clean abstraction for handling commands and queries in your applications using CQRS (Command Query Responsibility Segregation) principles.
+A lightweight mediator pattern implementation for .NET 9/10, providing a simple and clean abstraction for handling commands and queries in your applications using CQRS (Command Query Responsibility Segregation) principles.
 
 ## Overview
 
@@ -14,7 +14,7 @@ This project implements the mediator pattern to decouple request/response handli
 - **Automatic Handler Registration**: Automatically discovers and registers all handlers from assemblies
 - **Async/Await Support**: Full async support with cancellation tokens
 - **Lightweight**: Minimal dependencies (only Microsoft.Extensions.DependencyInjection.Abstractions)
-- **.NET 9**: Built for the latest .NET platform with nullable reference types enabled
+- **.NET 9/10**: Built for the latest .NET platform with nullable reference types enabled
 
 ## Project Structure
 
@@ -31,11 +31,26 @@ base-mediatr/
 └── base-mediatr.csproj     # Project file
 ```
 
+## Pipeline behaviors and notifications (1.0.0)
+
+```csharp
+services.AddMediator(typeof(Program).Assembly);           // handlers (commands, queries, notifications) are scanned
+services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));   // behaviors are NOT scanned;
+services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>)); // first registered = outermost
+```
+
+- `IPipelineBehavior<TRequest, TResult>` wraps commands (both forms) and queries. A command without a result flows with `TResult = Unit`.
+- `INotification` / `INotificationHandler<T>` / `IPublisher.PublishAsync`: handlers run sequentially, the first exception propagates. `IMediator : IPublisher`.
+- Handler exceptions propagate unwrapped (typed dispatch, no reflection invoke).
+- Namespace is `Smpl.Mediatr` (package id `Smpl.Mediatr`). The parameterless `AddMediator()` is obsolete.
+
+Releases: bump `<Version>`, push a tag `vX.Y.Z`; the publish workflow uses the repository secret `NUGET_API_KEY`.
+
 ## Getting Started
 
 ### Prerequisites
 
-- .NET 9 SDK
+- .NET 9/10 SDK
 - Microsoft.Extensions.DependencyInjection (for DI container)
 
 ### Installation
@@ -105,7 +120,7 @@ public class GetUserQueryHandler : IQueryHandler<GetUserQuery, User>
 The easiest way to register the mediator and all handlers is using the extension method:
 
 ```csharp
-using base_mediatr.Extension;
+using Smpl.Mediatr.Extension;
 
 // Register mediator and automatically discover all handlers in the current assembly
 services.AddMediator();
@@ -225,4 +240,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgments
 
 - Inspired by the MediatR library
-- Built with .NET 9 and modern C# features
+- Built with .NET 9/10 and modern C# features

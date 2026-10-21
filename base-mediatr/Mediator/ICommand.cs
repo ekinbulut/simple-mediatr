@@ -1,4 +1,4 @@
-namespace base_mediatr;
+namespace Smpl.Mediatr;
 
 public interface ICommand<TResult>
 {

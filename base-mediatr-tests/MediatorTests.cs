@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using base_mediatr;
+using Smpl.Mediatr;
 using Xunit;
 
 public class MediatorTests

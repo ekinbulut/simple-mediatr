@@ -1,6 +1,7 @@
+#pragma warning disable CS0618 // parameterless AddMediator is obsolete; still covered for compatibility
 using System.Reflection;
-using base_mediatr;
-using base_mediatr.Extension;
+using Smpl.Mediatr;
+using Smpl.Mediatr.Extension;
 using Microsoft.Extensions.DependencyInjection;
 
 public class ServiceCollectionExtensionsTests

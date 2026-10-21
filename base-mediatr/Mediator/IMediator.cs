@@ -1,6 +1,6 @@
-namespace base_mediatr;
+namespace Smpl.Mediatr;
 
-public interface IMediator
+public interface IMediator : IPublisher
 {
     Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default);
     Task SendAsync(ICommand command, CancellationToken cancellationToken = default);
