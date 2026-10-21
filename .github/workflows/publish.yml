@@ -1,0 +1,38 @@
+name: Publish to nuget.org
+
+# Runs only when a version tag such as v1.0.0 is pushed.
+on:
+  push:
+    tags: [ "v*" ]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          9.0.x
+          10.0.x
+    - name: Check tag matches package version
+      run: |
+        csproj_version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' base-mediatr/base-mediatr.csproj)
+        if [ "v${csproj_version}" != "${GITHUB_REF_NAME}" ]; then
+          echo "Tag ${GITHUB_REF_NAME} does not match csproj version v${csproj_version}" >&2
+          exit 1
+        fi
+    - name: Restore
+      run: dotnet restore
+    - name: Test
+      run: dotnet test -c Release
+    - name: Pack
+      run: dotnet pack -c Release -o ./artifacts
+    - name: Push to nuget.org
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push "./artifacts/*.nupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate

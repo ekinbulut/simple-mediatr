@@ -1,5 +1,5 @@
 ﻿using System;
-using base_mediatr;
+using Smpl.Mediatr;
 using Xunit;
 
 public class TestCommand : ICommand { }

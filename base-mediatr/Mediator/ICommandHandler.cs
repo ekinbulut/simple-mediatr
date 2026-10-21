@@ -1,4 +1,4 @@
-namespace base_mediatr;
+namespace Smpl.Mediatr;
 
 public interface ICommandHandler<in TCommand, TResult>
     where TCommand : ICommand<TResult>
