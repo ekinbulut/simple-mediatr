@@ -31,7 +31,7 @@ base-mediatr/
 └── base-mediatr.csproj     # Project file
 ```
 
-## Pipeline behaviors and notifications (1.0.0)
+## Pipeline behaviors and notifications (2.0.0)
 
 ```csharp
 services.AddMediator(typeof(Program).Assembly);           // handlers (commands, queries, notifications) are scanned

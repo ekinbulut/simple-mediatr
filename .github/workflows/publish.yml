@@ -1,6 +1,6 @@
 name: Publish to nuget.org
 
-# Runs only when a version tag such as v1.0.0 is pushed.
+# Runs only when a version tag such as v2.0.0 is pushed.
 on:
   push:
     tags: [ "v*" ]
